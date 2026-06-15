@@ -854,6 +854,134 @@ button {
   position: relative;
 }
 
+.product-hover-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.75);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast), background-color var(--transition-fast);
+}
+
+.product-card:hover .product-hover-overlay {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.overlay-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(31, 26, 24, 0.1);
+}
+
+.overlay-icon:hover {
+  transform: scale(1.08);
+  background-color: var(--primary);
+  color: var(--white);
+  box-shadow: 0 6px 16px rgba(31, 26, 24, 0.15);
+}
+
+.overlay-search-btn {
+  position: absolute;
+  left: 12px;
+  right: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+}
+
+.overlay-search-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+}
+
+.overlay-add-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(195, 80, 43, 0.3);
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(31, 26, 24, 0.1);
+  z-index: 8;
+}
+
+.overlay-add-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  background-color: var(--primary);
+  color: var(--white);
+  box-shadow: 0 6px 16px rgba(31, 26, 24, 0.15);
+}
+
+.overlay-add-icon {
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.overlay-count-bubble {
+  position: absolute;
+  top: 12px;
+  right: 56px;
+  min-width: 26px;
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background-color: var(--primary);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 7;
+}
+
+.overlay-count-bubble.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
+@keyframes bubble-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.overlay-count-bubble.pulse {
+  animation: bubble-pop 0.3s ease-out;
+}
+
+.product-image-container.has-qty .overlay-count-bubble {
+  transform: scale(1);
+  opacity: 1;
+}
+
 .product-image {
   width: 100%;
   height: 100%;
@@ -1741,3 +1869,4 @@ button {
     border-radius: 8px;
   }
 }
+

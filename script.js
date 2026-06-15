@@ -256,6 +256,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function addProductToCart(id, title, price, imgUrl) {
+    if (!cartData[id]) {
+      cartData[id] = { id, name: title, price, qty: 1, img: imgUrl };
+    } else {
+      cartData[id].qty += 1;
+    }
+    updateCartUI();
+  }
+
+  function animateOverlayCount(bubble) {
+    if (!bubble) return;
+    bubble.classList.add('show');
+    bubble.classList.add('pulse');
+    setTimeout(() => bubble.classList.remove('pulse'), 350);
+  }
+
   // Setup page Product Card event listeners
   const cards = document.querySelectorAll('.product-card');
   cards.forEach(card => {
@@ -270,32 +286,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const qtyCountSpan = card.querySelector('.qty-count');
     const btnPlus = card.querySelector('.plus');
     const btnMinus = card.querySelector('.minus');
+    const overlayAddBtn = card.querySelector('.overlay-add-btn');
+    const overlayCountBubble = card.querySelector('.overlay-count-bubble');
 
-    // Add click
-    addBtn.addEventListener('click', () => {
-      cartData[id] = { id, name: title, price, qty: 1, img: imgUrl };
-      updateCartUI();
-      openCart();
-    });
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        addProductToCart(id, title, price, imgUrl);
+        animateOverlayCount(overlayCountBubble);
+        openCart();
+      });
+    }
 
-    // Plus click
-    btnPlus.addEventListener('click', () => {
-      if (cartData[id]) {
-        cartData[id].qty += 1;
-        updateCartUI();
-      }
-    });
-
-    // Minus click
-    btnMinus.addEventListener('click', () => {
-      if (cartData[id]) {
-        cartData[id].qty -= 1;
-        if (cartData[id].qty <= 0) {
-          delete cartData[id];
+    if (overlayAddBtn) {
+      overlayAddBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        addProductToCart(id, title, price, imgUrl);
+        if (overlayCountBubble) {
+          overlayCountBubble.innerText = cartData[id].qty;
+          overlayCountBubble.classList.add('show');
+          overlayCountBubble.classList.add('pulse');
+          setTimeout(() => overlayCountBubble.classList.remove('pulse'), 350);
         }
-        updateCartUI();
-      }
-    });
+        openCart();
+      });
+    }
+
+    if (btnPlus) {
+      btnPlus.addEventListener('click', () => {
+        if (cartData[id]) {
+          cartData[id].qty += 1;
+          updateCartUI();
+        }
+      });
+    }
+
+    if (btnMinus) {
+      btnMinus.addEventListener('click', () => {
+        if (cartData[id]) {
+          cartData[id].qty -= 1;
+          if (cartData[id].qty <= 0) {
+            delete cartData[id];
+          }
+          updateCartUI();
+        }
+      });
+    }
   });
 
   // Re-renders the cart elements everywhere (badge counts, drawer listing, product quantity selectors)
@@ -303,21 +339,30 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalItems = 0;
     let subtotal = 0;
 
-    // 1. Sync card buttons and selectors on page
+    // 1. Sync card buttons, selectors, and overlay counts on page
     const allCards = document.querySelectorAll('.product-card');
     allCards.forEach(card => {
       const id = card.dataset.id;
       const addBtn = card.querySelector('.add-to-cart-btn');
       const qtySelector = card.querySelector('.quantity-selector');
       const qtyCountSpan = card.querySelector('.qty-count');
+      const overlayCountBubble = card.querySelector('.overlay-count-bubble');
 
       if (cartData[id]) {
-        addBtn.classList.add('hidden');
-        qtySelector.classList.remove('hidden');
-        qtyCountSpan.innerText = cartData[id].qty;
+        if (addBtn) addBtn.classList.add('hidden');
+        if (qtySelector) qtySelector.classList.remove('hidden');
+        if (qtyCountSpan) qtyCountSpan.innerText = cartData[id].qty;
+        if (overlayCountBubble) {
+          overlayCountBubble.classList.add('show');
+          overlayCountBubble.innerText = cartData[id].qty;
+        }
       } else {
-        addBtn.classList.remove('hidden');
-        qtySelector.classList.add('hidden');
+        if (addBtn) addBtn.classList.remove('hidden');
+        if (qtySelector) qtySelector.classList.add('hidden');
+        if (overlayCountBubble) {
+          overlayCountBubble.classList.remove('show');
+          overlayCountBubble.innerText = '0';
+        }
       }
     });
 
