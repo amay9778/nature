@@ -83,6 +83,20 @@ button {
   scrollbar-width: none;
 }
 
+/* Hide horizontal scrollbar for category shelf and horizontal scrollers */
+.shelf-container,
+.trending-scroller,
+.mobile-quick-scroll-nav {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.shelf-container::-webkit-scrollbar,
+.trending-scroller::-webkit-scrollbar,
+.mobile-quick-scroll-nav::-webkit-scrollbar {
+  display: none;
+  height: 0;
+}
+
 /* --- Promo Banner --- */
 .promo-banner {
   background-color: var(--primary);
